@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <main>
       <div>
-        <StButton onClick={goNewPage}>설문지 만들러가기</StButton>
+        <StButton onClick={goNewPage}>30초만에 만들러 가기</StButton>
       </div>
     </main>
   );
