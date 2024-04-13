@@ -36,6 +36,7 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.2.0"],\
           ["react-dom", "virtual:90eb566e2a7dc860154895fc021d41c5055ffadcb60622a7a1a980f7e562cfb17eb122db3273b2a242419bb5c37e4ccf883f6d46cdb57a9e7cf873cab0eb4f69#npm:18.2.0"],\
           ["styled-components", "virtual:90eb566e2a7dc860154895fc021d41c5055ffadcb60622a7a1a980f7e562cfb17eb122db3273b2a242419bb5c37e4ccf883f6d46cdb57a9e7cf873cab0eb4f69#npm:6.1.8"],\
+          ["swiper", "npm:11.1.1"],\
           ["typescript", "patch:typescript@npm%3A5.4.4#optional!builtin<compat/typescript>::version=5.4.4&hash=5adc0c"]\
         ],\
         "linkType": "SOFT"\
@@ -2822,6 +2823,7 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.2.0"],\
           ["react-dom", "virtual:90eb566e2a7dc860154895fc021d41c5055ffadcb60622a7a1a980f7e562cfb17eb122db3273b2a242419bb5c37e4ccf883f6d46cdb57a9e7cf873cab0eb4f69#npm:18.2.0"],\
           ["styled-components", "virtual:90eb566e2a7dc860154895fc021d41c5055ffadcb60622a7a1a980f7e562cfb17eb122db3273b2a242419bb5c37e4ccf883f6d46cdb57a9e7cf873cab0eb4f69#npm:6.1.8"],\
+          ["swiper", "npm:11.1.1"],\
           ["typescript", "patch:typescript@npm%3A5.4.4#optional!builtin<compat/typescript>::version=5.4.4&hash=5adc0c"]\
         ],\
         "linkType": "SOFT"\
@@ -3639,6 +3641,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/supports-preserve-symlinks-flag-npm-1.0.0-f17c4d0028-10c0.zip/node_modules/supports-preserve-symlinks-flag/",\
         "packageDependencies": [\
           ["supports-preserve-symlinks-flag", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["swiper", [\
+      ["npm:11.1.1", {\
+        "packageLocation": "../../../.yarn/berry/cache/swiper-npm-11.1.1-fbb4753780-10c0.zip/node_modules/swiper/",\
+        "packageDependencies": [\
+          ["swiper", "npm:11.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
