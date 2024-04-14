@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
-import ImageDiv from "./components/ImageDiv";
+import ImageDiv from "./components/common/ImageDiv";
 import { useRef, useState } from "react";
 
 export default function Home() {
@@ -91,9 +91,9 @@ export default function Home() {
                   <br />
                   <StLogo
                     className={isSlideInAnimation ? "slideInAnimation" : ""}
-                    data-text="넌지시"
+                    data-text="넌지시 -"
                   >
-                    넌지시
+                    넌지시 -
                   </StLogo>
                   <br />
                   물어보세요.
@@ -199,16 +199,16 @@ const fadeInAnimation = keyframes`
 `;
 
 const slideInAnimation = keyframes`
-  from { 
-    width: 0;
-  }
-  to { 
-    width: 100%;
-    opacity: 1; 
-  }
+    from {
+      background-position: -100% 0; /* Start from the right */
+    }
+    to {
+      background-position: -200% 0; /* Slide to the left */
+    }
 `;
 
 const StFadeText1 = styled.p`
+  margin-bottom: 2rem;
   &.fadeAnimation {
     animation: ${fadeOutAnimation} 0.9s forwards;
     animation-delay: 1.4s;
@@ -228,20 +228,21 @@ const StLogo = styled.span`
   font-family: "Laundry Gothic Bold", sans-serif;
 
   &.slideInAnimation {
-    position: relative;
-    white-space: nowrap;
-    color: rgba(31, 98, 0, 0.3);
-  }
+    background: linear-gradient(
+      to right,
+      rgba(31, 98, 0, 1) 10%,
+      #1f6200 40%,
+      #1f6200 60%,
+      rgba(31, 98, 0, 0.3) 80%
+    );
+    background-size: 200% auto;
 
-  &.slideInAnimation::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: -0.3rem;
-    color: #1f6200;
-    overflow: hidden;
-    width: 40%;
-    animation: ${slideInAnimation} 2s forwards;
+    color: #000;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    animation: ${slideInAnimation} 2.4s ease-in-out forwards;
   }
 `;
 
