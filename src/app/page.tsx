@@ -2,17 +2,17 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import ImageDiv from "./components/ImageDiv";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [isSwiperEnd, setIsSwiperEnd] = useState(false);
-  const [isSkipButtonClicked, setIsSkipButtonClicked] = useState(false);
+  const [isFadeAnimation, setIsFadeAnimation] = useState(false);
   const swiper = useRef<Swiper>(null);
   const router = useRouter();
 
@@ -32,6 +32,9 @@ export default function Home() {
           slidesPerView={1}
           onSlideChange={(swiper) => {
             setIsSwiperEnd(swiper.isEnd);
+            if (swiper.activeIndex === 1) {
+              setIsFadeAnimation(true);
+            }
           }}
           pagination={{
             clickable: true,
@@ -53,15 +56,15 @@ export default function Home() {
           <SwiperSlide>
             <StSlide>
               <StText>
-                <p>
+                <StFadeText1 className={isFadeAnimation ? "fadeAnimation" : ""}>
                   어떤 설문조사에서는, <br />
                   용돈이 1위라는데 <br />
-                </p>
-                <p>
+                </StFadeText1>
+                <StFadeText2 className={isFadeAnimation ? "fadeAnimation" : ""}>
                   우리 부모님도
                   <br />
                   용돈을 좋아하실까?
-                </p>
+                </StFadeText2>
               </StText>
             </StSlide>
           </SwiperSlide>
@@ -168,6 +171,40 @@ const StText = styled.div`
   }
 `;
 
+const fadeOutAnimation = keyframes`
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+`;
+
+const fadeInAnimation = keyframes`
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
+const StFadeText1 = styled.p`
+  &.fadeAnimation {
+    animation: ${fadeOutAnimation} 0.9s forwards;
+    animation-delay: 1.4s;
+  }
+`;
+
+const StFadeText2 = styled.p`
+  opacity: 0.3;
+
+  &.fadeAnimation {
+    animation: ${fadeInAnimation} 0.9s forwards;
+    animation-delay: 1.4s;
+  }
+`;
+
 const StSkipButton = styled.button`
   font-size: 16px;
   width: 8rem;
@@ -175,5 +212,8 @@ const StSkipButton = styled.button`
   text-align: center;
   opacity: 0.6;
   margin: 2.2rem auto 0 auto;
-  display: block;
+  position: absolute;
+  bottom: 10rem;
+  left: 50%; /* 가운데 정렬 */
+  transform: translateX(-50%); /* 좌우 위치 조절 */
 `;
