@@ -47,3 +47,10 @@ a:visited {
   text-decoration: none;
   color: black;
 }
+
+@font-face {
+  font-family: "Laundry Gothic Bold";
+  src: url("/LaundryGothicBold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}

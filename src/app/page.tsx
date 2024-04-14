@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styled, { keyframes } from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,11 +7,12 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import ImageDiv from "./components/ImageDiv";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Home() {
   const [isSwiperEnd, setIsSwiperEnd] = useState(false);
   const [isFadeAnimation, setIsFadeAnimation] = useState(false);
+  const [isSlideInAnimation, setIsSlideInAnimation] = useState(false);
   const swiper = useRef<Swiper>(null);
   const router = useRouter();
 
@@ -34,6 +34,9 @@ export default function Home() {
             setIsSwiperEnd(swiper.isEnd);
             if (swiper.activeIndex === 1) {
               setIsFadeAnimation(true);
+            }
+            if (swiper.activeIndex === 3) {
+              setIsSlideInAnimation(true);
             }
           }}
           pagination={{
@@ -86,7 +89,12 @@ export default function Home() {
                 <p>
                   지금 바로 부모님께
                   <br />
-                  넌지시
+                  <StLogo
+                    className={isSlideInAnimation ? "slideInAnimation" : ""}
+                    data-text="넌지시"
+                  >
+                    넌지시
+                  </StLogo>
                   <br />
                   물어보세요.
                 </p>
@@ -168,24 +176,35 @@ const StText = styled.div`
 
   .underline {
     text-decoration: underline;
+    text-underline-offset: 0.5rem; /* 원하는 간격으로 조절 */
   }
 `;
 
 const fadeOutAnimation = keyframes`
-  0% {
+  from {
     opacity: 1;
   }
-  100% {
+  to {
     opacity: 0.3;
   }
 `;
 
 const fadeInAnimation = keyframes`
-  0% {
+  from {
     opacity: 0.3;
   }
-  100% {
+  to {
     opacity: 1;
+  }
+`;
+
+const slideInAnimation = keyframes`
+  from { 
+    width: 0;
+  }
+  to { 
+    width: 100%;
+    opacity: 1; 
   }
 `;
 
@@ -202,6 +221,27 @@ const StFadeText2 = styled.p`
   &.fadeAnimation {
     animation: ${fadeInAnimation} 0.9s forwards;
     animation-delay: 1.4s;
+  }
+`;
+
+const StLogo = styled.span`
+  font-family: "Laundry Gothic Bold", sans-serif;
+
+  &.slideInAnimation {
+    position: relative;
+    white-space: nowrap;
+    color: rgba(31, 98, 0, 0.3);
+  }
+
+  &.slideInAnimation::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: -0.3rem;
+    color: #1f6200;
+    overflow: hidden;
+    width: 40%;
+    animation: ${slideInAnimation} 2s forwards;
   }
 `;
 
