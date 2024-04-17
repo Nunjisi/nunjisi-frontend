@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import CommonButton from "@/app/components/common/CommonButton";
 import { optionList } from "@/app/util/optionList";
@@ -9,11 +9,37 @@ import Option from "@/app/components/common/Option";
 export default function SurveyNew() {
   const [step, setStep] = useState(1);
   const [isAllSelected, setIsAllSelected] = useState(true);
+  const [selectedOptionList, setSelectedOptionList] = useState(
+    optionList.map((item) => item.text)
+  );
+  const [isMinimumOptionSelected, setIsMinimumOptionSelected] = useState(
+    selectedOptionList.length >= 2
+  );
+
   const enterKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       setStep(step + 1);
     }
   };
+
+  const handleSelectOption = (text: string) => {
+    if (selectedOptionList.includes(text)) {
+      setSelectedOptionList(selectedOptionList.filter((item) => item !== text));
+    } else {
+      setSelectedOptionList([...selectedOptionList, text]);
+    }
+  };
+
+  const createTest = () => {
+    // todo : 테스트 만들기
+    console.log(selectedOptionList);
+  };
+
+  useEffect(() => {
+    selectedOptionList.length < 2
+      ? setIsMinimumOptionSelected(false)
+      : setIsMinimumOptionSelected(true);
+  }, [selectedOptionList]);
 
   return (
     <StLayout>
@@ -53,7 +79,7 @@ export default function SurveyNew() {
                 className="allSelectToggleButton"
                 handler={() => {
                   setIsAllSelected(false);
-                  console.log(isAllSelected);
+                  setSelectedOptionList([]);
                 }}
               />
             ) : (
@@ -63,14 +89,17 @@ export default function SurveyNew() {
                 className="allSelectToggleButton"
                 handler={() => {
                   setIsAllSelected(true);
-                  console.log(isAllSelected);
+                  setSelectedOptionList(optionList.map((item) => item.text));
                 }}
               />
             )}
 
             {optionList.map((item, index) => {
               return (
-                <div key={item.text}>
+                <div
+                  key={item.text}
+                  onClick={() => handleSelectOption(item.text)}
+                >
                   <Option
                     text={item.text}
                     imgSrc={item.imgSrc}
@@ -80,11 +109,20 @@ export default function SurveyNew() {
                 </div>
               );
             })}
-            <CommonButton
-              text="테스트 만들기"
-              color="white"
-              className="createTestButton"
-            />
+            {isMinimumOptionSelected ? (
+              <CommonButton
+                text="테스트 만들기"
+                color="white"
+                className="bottomButton"
+                handler={createTest}
+              />
+            ) : (
+              <CommonButton
+                text="항목을 두 개 이상 선택해주세요"
+                color="gray"
+                className="disabled bottomButton"
+              />
+            )}
           </>
         )}
       </StSurveyNewPage>
@@ -107,7 +145,7 @@ const StSurveyNewPage = styled.main`
     margin: 4rem 0 2.4rem 0;
   }
 
-  .createTestButton {
+  .bottomButton {
     margin: 2.4rem 0 7rem 0;
   }
 `;

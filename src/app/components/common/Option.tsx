@@ -65,7 +65,8 @@ const OptionComponent = styled.div`
   align-items: center;
 
   .image {
-    border-radius: 50%;
+    border-radius: 80%;
+    overflow: hidden;
   }
 `;
 

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 interface CommonButtonI {
   text: string;
-  color: "semi-black" | "semi-white" | "black" | "white";
+  color: "semi-black" | "semi-white" | "black" | "white" | "gray";
   handler?: () => void;
   className?: string;
 }
@@ -36,6 +36,8 @@ const StButton = styled.div<{ color: string }>`
       ? "#000000"
       : props.color === "white"
       ? "#ffffff"
+      : props.color === "gray"
+      ? "#686868"
       : ""};
 
   & > p {
@@ -48,6 +50,8 @@ const StButton = styled.div<{ color: string }>`
         ? "white"
         : props.color === "white"
         ? "black"
+        : props.color === "gray"
+        ? "white"
         : ""};
   }
 
