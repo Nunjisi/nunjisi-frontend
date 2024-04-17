@@ -230,19 +230,16 @@ const StLogo = styled.span`
   &.slideInAnimation {
     background: linear-gradient(
       to right,
-      rgba(31, 98, 0, 1) 10%,
-      #1f6200 40%,
-      #1f6200 60%,
-      rgba(31, 98, 0, 0.3) 80%
+      rgba(31, 98, 0) 0%,
+      rgba(31, 98, 0, 0.1) 50%
     );
     background-size: 200% auto;
 
-    color: #000;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
-    animation: ${slideInAnimation} 2.4s ease-in-out forwards;
+    animation: ${slideInAnimation} 1s linear forwards;
   }
 `;
 
