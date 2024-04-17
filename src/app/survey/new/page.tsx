@@ -5,9 +5,11 @@ import { styled } from "styled-components";
 import CommonButton from "@/app/components/common/CommonButton";
 import { optionList } from "@/app/util/optionList";
 import Option from "@/app/components/common/Option";
+import CreateComplete from "@/app/components/surveyNew/CreateComplete";
 
 export default function SurveyNew() {
   const [step, setStep] = useState(1);
+  const [name, setName] = useState("");
   const [isAllSelected, setIsAllSelected] = useState(true);
   const [selectedOptionList, setSelectedOptionList] = useState(
     optionList.map((item) => item.text)
@@ -31,8 +33,9 @@ export default function SurveyNew() {
   };
 
   const createTest = () => {
-    // todo : 테스트 만들기
+    // todo : 테스트 만들기 성공시 step + 1
     console.log(selectedOptionList);
+    setStep(step + 1);
   };
 
   useEffect(() => {
@@ -61,6 +64,7 @@ export default function SurveyNew() {
             <StAnswer
               placeholder="한 글자 이상 입력해주세요"
               onKeyDown={(e) => enterKeyDown(e)}
+              onChange={(e) => setName(e.target.value)}
             ></StAnswer>
           </>
         )}
@@ -125,6 +129,7 @@ export default function SurveyNew() {
             )}
           </>
         )}
+        {step === 3 && <CreateComplete name={name} link="" />}
       </StSurveyNewPage>
 
       <StBackgroundDim />
@@ -140,6 +145,7 @@ const StSurveyNewPage = styled.main`
   padding: 3rem;
   z-index: 1;
   width: 39rem;
+  height: 100vh;
 
   .allSelectToggleButton {
     margin: 4rem 0 2.4rem 0;

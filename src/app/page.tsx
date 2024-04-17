@@ -137,7 +137,7 @@ const StNextButton = styled.button`
   justify-content: center;
   align-items: center;
   position: absolute;
-  bottom: 10rem;
+  bottom: 3rem;
   left: 50%; /* 가운데 정렬 */
   transform: translateX(-50%); /* 좌우 위치 조절 */
 
@@ -160,7 +160,7 @@ const StSwiper = styled.div`
 const StSlide = styled.div`
   font-size: 2rem;
   width: 100vw;
-  height: 67.4rem;
+  height: 57.4rem; /* 핸드폰에 맞게 임의로 변경 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -251,7 +251,7 @@ const StSkipButton = styled.button`
   opacity: 0.6;
   margin: 2.2rem auto 0 auto;
   position: absolute;
-  bottom: 10rem;
+  bottom: 3rem;
   left: 50%; /* 가운데 정렬 */
   transform: translateX(-50%); /* 좌우 위치 조절 */
 `;

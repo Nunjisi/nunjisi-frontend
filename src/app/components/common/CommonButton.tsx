@@ -54,39 +54,6 @@ const StButton = styled.div<{ color: string }>`
         ? "white"
         : ""};
   }
-
-  /* &.semi-black {
-    background-color: rgba(1, 1, 1, 0.3);
-
-    & > p {
-      color: white;
-    }
-  }
-
-  &.semi-white {
-    background-color: white;
-    opacity: 0.3;
-
-    & > p {
-      color: white;
-    }
-  }
-
-  &.white {
-    background-color: white;
-
-    & > p {
-      color: black;
-    }
-  }
-
-  &.black {
-    background-color: black;
-
-    & > p {
-      color: white;
-    }
-  } */
 `;
 
 export default CommonButton;
