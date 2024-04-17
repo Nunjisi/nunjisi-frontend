@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import { styled } from "styled-components";
+import CommonButton from "@/app/components/common/CommonButton";
+import { optionList } from "@/app/util/optionList";
+import Option from "@/app/components/common/Option";
 
 export default function SurveyNew() {
   const [step, setStep] = useState(1);
+  const [isAllSelected, setIsAllSelected] = useState(true);
   const enterKeyDown = (e: KeyboardEvent) => {
-    console.log(e.key);
     if (e.key === "Enter") {
       setStep(step + 1);
     }
   };
+
   return (
     <StLayout>
       <StSurveyNewPage>
@@ -35,12 +39,53 @@ export default function SurveyNew() {
           </>
         )}
         {step === 2 && (
-          <StMainText>
-            어버이날 선물 후보에서
-            <br />
-            제외하고 싶은 항목은 <br />
-            빼주세요
-          </StMainText>
+          <>
+            <StMainText>
+              어버이날 선물 후보에서
+              <br />
+              제외하고 싶은 항목은 <br />
+              빼주세요
+            </StMainText>
+            {isAllSelected ? (
+              <CommonButton
+                text="모두 선택 해제하기"
+                color="semi-black"
+                className="allSelectToggleButton"
+                handler={() => {
+                  setIsAllSelected(false);
+                  console.log(isAllSelected);
+                }}
+              />
+            ) : (
+              <CommonButton
+                text="모두 선택하기"
+                color="semi-white"
+                className="allSelectToggleButton"
+                handler={() => {
+                  setIsAllSelected(true);
+                  console.log(isAllSelected);
+                }}
+              />
+            )}
+
+            {optionList.map((item, index) => {
+              return (
+                <div key={item.text}>
+                  <Option
+                    text={item.text}
+                    imgSrc={item.imgSrc}
+                    state={isAllSelected}
+                    isLastComponent={index === optionList.length - 1}
+                  />
+                </div>
+              );
+            })}
+            <CommonButton
+              text="테스트 만들기"
+              color="white"
+              className="createTestButton"
+            />
+          </>
         )}
       </StSurveyNewPage>
 
@@ -57,6 +102,14 @@ const StSurveyNewPage = styled.main`
   padding: 3rem;
   z-index: 1;
   width: 39rem;
+
+  .allSelectToggleButton {
+    margin: 4rem 0 2.4rem 0;
+  }
+
+  .createTestButton {
+    margin: 2.4rem 0 7rem 0;
+  }
 `;
 
 const StBackgroundDim = styled.div`
