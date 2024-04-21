@@ -18,12 +18,12 @@ function Option(props: OptionI) {
   }, [state]);
 
   return (
-    <div>
-      <OptionComponent
-        onClick={() => {
-          setCurrentState((prev) => !prev);
-        }}
-      >
+    <div
+      onClick={() => {
+        setCurrentState((prev) => !prev);
+      }}
+    >
+      <OptionComponent>
         <StInfo>
           <ImageDiv
             src={imgSrc}

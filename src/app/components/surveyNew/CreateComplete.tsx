@@ -9,6 +9,16 @@ interface CreateCompleteI {
 function CreateComplete(props: CreateCompleteI) {
   const { name, link } = props;
 
+  const doCopy = () => {
+    const copyLink = process.env.NEXT_PUBLIC_URL + "/survey/join/" + link;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(copyLink);
+      alert("링크를 복사했습니다.");
+    } else {
+      alert("복사하기를 지원하지 않는 브라우저입니다.");
+    }
+  };
+
   return (
     <CreateCompleteComponent>
       <div>
@@ -31,6 +41,7 @@ function CreateComplete(props: CreateCompleteI) {
         text="테스트 링크 복사"
         color="white"
         className="linkCopyButton"
+        handler={doCopy}
       />
     </CreateCompleteComponent>
   );

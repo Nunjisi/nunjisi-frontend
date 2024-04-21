@@ -6,6 +6,7 @@ import CommonButton from "@/app/components/common/CommonButton";
 import { optionList } from "@/app/util/optionList";
 import Option from "@/app/components/common/Option";
 import CreateComplete from "@/app/components/surveyNew/CreateComplete";
+import axios from "axios";
 
 export default function SurveyNew() {
   const [step, setStep] = useState(1);
@@ -17,6 +18,7 @@ export default function SurveyNew() {
   const [isMinimumOptionSelected, setIsMinimumOptionSelected] = useState(
     selectedOptionList.length >= 2
   );
+  const [createdLink, setCreatedLink] = useState("");
 
   const enterKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -32,10 +34,21 @@ export default function SurveyNew() {
     }
   };
 
-  const createTest = () => {
+  const createTest = async () => {
     // todo : 테스트 만들기 성공시 step + 1
-    console.log(selectedOptionList);
-    setStep(step + 1);
+    await axios
+      .post(process.env.NEXT_PUBLIC_API_BASE_URL + "/survey", {
+        name: name,
+        option: JSON.stringify(selectedOptionList),
+      })
+      .then((res) => {
+        console.log(res.data.data.link);
+        setCreatedLink(res.data.data.link);
+        setStep(step + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -129,7 +142,7 @@ export default function SurveyNew() {
             )}
           </>
         )}
-        {step === 3 && <CreateComplete name={name} link="" />}
+        {step === 3 && <CreateComplete name={name} link={createdLink} />}
       </StSurveyNewPage>
 
       <StBackgroundDim />
@@ -144,8 +157,9 @@ const StLayout = styled.div`
 const StSurveyNewPage = styled.main`
   padding: 3rem;
   z-index: 1;
-  width: 39rem;
-  height: 100vh;
+  width: 100vw;
+  max-width: 39rem;
+  height: 100%;
 
   .allSelectToggleButton {
     margin: 4rem 0 2.4rem 0;

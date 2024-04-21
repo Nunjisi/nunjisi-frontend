@@ -10,7 +10,7 @@ export const optionList: Option[] = [
   { text: "금", imgSrc: "/flower.jpeg" },
   { text: "건강검진", imgSrc: "/flower.jpeg" },
   { text: "청소기", imgSrc: "/flower.jpeg" },
-  { text: "식기새척기", imgSrc: "/flower.jpeg" },
+  { text: "식기세척기", imgSrc: "/flower.jpeg" },
   { text: "공기청정기", imgSrc: "/flower.jpeg" },
   { text: "세탁기", imgSrc: "/flower.jpeg" },
   { text: "가습기", imgSrc: "/flower.jpeg" },
