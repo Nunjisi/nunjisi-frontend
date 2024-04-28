@@ -17,7 +17,6 @@ function JoinComponent(props: linkDataI) {
   const [currentRound, setCurrentRound] = useState(0);
   const [result, setResult] = useState<string[]>(["", "", ""]);
   const [candidateArray, setCandidateArray] = useState<string[]>([]);
-  const [isGroupA, setIsGroupA] = useState(true);
   const [isMoreRound, setIsMoreRound] = useState(false);
 
   useEffect(() => {
@@ -30,15 +29,9 @@ function JoinComponent(props: linkDataI) {
 
   const length = JSON.parse(data).length;
 
-  useEffect(() => {
-    (length - 1) % 4 == 0 || (length - 1) % 4 == 1
-      ? setIsGroupA(true) //A 면 추가라운드 필요 x, B 면 추가 라운드 필요 o
-      : setIsGroupA(false);
-  }, [length]);
-
   const select = (selectedIdx: number) => {
     // 추가 라운드
-    if (!isGroupA && isMoreRound) {
+    if (isMoreRound) {
       setResult([result[0], result[1], dataArray[selectedIdx]]);
       setDataArray(dataArray.slice(2));
     }
@@ -50,20 +43,19 @@ function JoinComponent(props: linkDataI) {
       console.log("결승전");
 
       // 결승전
-      if (isGroupA) {
-        const thirdPlace = candidateArray.filter(
-          (v) =>
-            v !== dataArray[selectedIdx] &&
-            v !== dataArray[selectedIdx == 0 ? 1 : 0]
-        )[0];
-        setResult([
-          dataArray[selectedIdx],
-          dataArray[selectedIdx == 0 ? 1 : 0],
-          thirdPlace,
-        ]); // 1등, 2등, 3등 결정
-      }
 
-      if (!isGroupA) {
+      const thirdPlace = candidateArray.filter(
+        (v) =>
+          v !== dataArray[selectedIdx] &&
+          v !== dataArray[selectedIdx == 0 ? 1 : 0]
+      )[0];
+      setResult([
+        dataArray[selectedIdx],
+        dataArray[selectedIdx == 0 ? 1 : 0],
+        thirdPlace,
+      ]); // 1등, 2등, 3등 결정
+
+      if (isMoreRound) {
         // 3등 결정 전 한 번 더 추가.
         console.log("herere");
         setResult([
@@ -84,15 +76,12 @@ function JoinComponent(props: linkDataI) {
     }
 
     // 3등 후보 결정
-    if (dataArray.length == 3) {
-      if (isGroupA) {
-        setDataArray((prev) => [dataArray[selectedIdx], dataArray[2]]);
-        setCandidateArray(dataArray);
-      }
+    if (dataArray.length == 3 && currentRound + 2 == length - 1) {
+      setDataArray((prev) => [dataArray[selectedIdx], dataArray[2]]);
+      setCandidateArray(dataArray);
     } else if (dataArray.length == 4 && currentRound + 3 == length - 1) {
-      if (!isGroupA) {
-        setCandidateArray(dataArray);
-      }
+      setCandidateArray(dataArray);
+      setIsMoreRound(true);
     }
 
     // 부전승
