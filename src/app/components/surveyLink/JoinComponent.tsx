@@ -10,15 +10,14 @@ function JoinComponent(props: linkDataI) {
   const { status, name, data } = props.linkData;
   const [isStarted, setIsStarted] = useState(true);
   const [isSurveyStarted, setIsSurveyStarted] = useState(false);
-  const [dataArray, setDataArray] = useState(JSON.parse(data));
+  const [isSurveyDone, setIsSurveyDone] = useState(false);
+
+  const [dataArray, setDataArray] = useState<string[]>(JSON.parse(data));
   const [selectedArray, setSelectedArray] = useState<string[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [result, setResult] = useState<string[]>(["", "", ""]);
   const [candidateArray, setCandidateArray] = useState<string[]>([]);
-  const [isSurveyDone, setIsSurveyDone] = useState(false);
-
-  const length = JSON.parse(data).length;
-  const roundNum = length % 2 === 0 ? length / 2 : Math.floor(length / 2) - 1;
+  const [isGroupA, setIsGroupA] = useState(true);
 
   useEffect(() => {
     if (isStarted) {
@@ -28,83 +27,64 @@ function JoinComponent(props: linkDataI) {
     }
   }, [isStarted]);
 
-  const select = (selectedIdx: number) => {
-    setSelectedArray([...selectedArray, dataArray[selectedIdx]]);
+  const length = JSON.parse(data).length;
 
-    if (dataArray.length > 1) {
-      // dataArray에서 선택된 요소를 제외한 나머지 요소로 업데이트
-      setDataArray(dataArray.slice(2));
+  useEffect(() => {
+    (length - 1) % 4 == 0 || (length - 1) % 4 == 1
+      ? setIsGroupA(true) //A 면 추가라운드 필요 x, B 면 추가 라운드 필요 o
+      : setIsGroupA(false);
+  }, [length]);
+
+  const select = (selectedIdx: number) => {
+    setSelectedArray((prev) => [...prev, dataArray[selectedIdx]]);
+    setCurrentRound((prev) => prev + 1);
+
+    if (isGroupA && currentRound == length - 2) {
+      // 결승전
+      console.log("결승전");
+      const thirdPlace = candidateArray.filter(
+        (v) =>
+          v !== dataArray[selectedIdx] &&
+          v !== dataArray[selectedIdx == 0 ? 1 : 0]
+      )[0];
+      setResult([
+        dataArray[selectedIdx],
+        dataArray[selectedIdx == 0 ? 1 : 0],
+        thirdPlace,
+      ]); // 1등, 2등, 3등 결정
     }
 
-    if (currentRound > roundNum) {
-      //번외 라운드면
-      setResult([result[0], result[1], dataArray[selectedIdx]]);
+    if (dataArray.length == 3) {
+      console.log("부전승");
+      //부전승 올리고 다음 라운드 시작
+      if (isGroupA) {
+        setCandidateArray(dataArray); // 3등 후보 결정
+      }
+
+      setDataArray((prev) => [dataArray[selectedIdx], dataArray[2]]);
+      setSelectedArray([]);
+    } else if (dataArray.length > 1) {
+      setDataArray(dataArray.slice(2));
     }
   };
 
   useEffect(() => {
-    console.log("==========");
-    console.log(currentRound + "/" + roundNum);
+    console.log("=======================");
+    console.log(dataArray);
+    console.log(selectedArray);
+    console.log(candidateArray);
+    console.log(result);
+    console.log(currentRound);
 
-    // 준결승전
-    if (currentRound === roundNum - 1 && candidateArray.length === 0) {
-      // 3등 될 수 있는 요소들이 이제 정해졌따
-      setCandidateArray(dataArray);
+    if (selectedArray.length !== 1 && dataArray.length == 0) {
+      //한 라운드가 끝났다면, 다음 라운드 시작
+      setDataArray(selectedArray);
+      setSelectedArray([]);
     }
-
-    // 결승전
-    if (
-      dataArray.length === 2 &&
-      currentRound === roundNum &&
-      selectedArray.length === 0
-    ) {
-      setResult([dataArray[0], dataArray[1], ""]);
-    } else if (currentRound == roundNum && selectedArray.length == 1) {
-      // 1등, 2등 정해짐
-      setCurrentRound(currentRound + 1); //번외 라운드 시작
-      if (selectedArray[0] != result[0]) {
-        const tmp = result[0];
-        setResult([selectedArray[0], tmp, ""]);
-      }
-
-      // 3등 정하기 시작
-      const updatedCandidateArray = candidateArray.filter(
-        (item: string) => item !== result[0] && item !== result[1]
-      );
-      console.log("필터 완료 " + updatedCandidateArray);
-      setCandidateArray(updatedCandidateArray);
-      if (candidateArray.length === 1) {
-        // 홀수
-        setResult([result[0], result[1], updatedCandidateArray[0]]);
-      } else {
-        // 2개면 한 번 더 선택해야 함
-        setDataArray(updatedCandidateArray);
-      }
-    } else {
-      if (dataArray.length === 1) {
-        // dataArray에 요소가 홀수라 하나만 남았을 때 가장 마지막 꺼는 부전승
-        console.log("부전승");
-        // 선택된 요소를 selectedArray에 추가
-        setSelectedArray([...selectedArray, dataArray[0]]);
-        // dataArray에서 선택된 요소를 제거
-        setDataArray([]);
-      }
-
-      if (dataArray.length == 0) {
-        // n 번째 라운드의 마지막 선택이면.
-        // TODO : dataArray 랜덤하게 섞기
-        setCurrentRound(currentRound + 1);
-        setDataArray([...selectedArray]);
-        setSelectedArray([]);
-      }
-    }
-  }, [dataArray, candidateArray]);
+  }, [dataArray]);
 
   useEffect(() => {
-    if (result[0] != "" && result[1] != "" && result[2] != "") {
-      setIsSurveyDone(true);
-      // TODO : 결과 보내는 api 호출
-    }
+    console.log("result " + result);
   }, [result]);
 
   return (

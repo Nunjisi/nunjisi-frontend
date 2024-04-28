@@ -2,8 +2,8 @@ import axios from "axios";
 import { useParams, usePathname } from "next/navigation";
 import styled from "styled-components";
 import { headers } from "next/headers";
-import JoinComponent from "./JoinComponent";
-import ResultComponent from "./ResultComponent";
+import JoinComponent from "../../components/surveyLink/JoinComponent";
+import ResultComponent from "../../components/surveyLink/ResultComponent";
 import { linkDataI } from "@/app/interface";
 
 const getLinkData = async () => {
