@@ -25,13 +25,17 @@ function Option(props: OptionI) {
     >
       <OptionComponent>
         <StInfo>
-          <ImageDiv
-            src={imgSrc}
-            alt={text}
-            className="image"
-            width={60}
-            height={60}
-          />
+          <StImageWrapper>
+            <ImageDiv
+              src={imgSrc}
+              alt={text}
+              width={60}
+              height={60}
+              className="image"
+              style={{ objectFit: "cover" }}
+            />
+          </StImageWrapper>
+
           <p>{text}</p>
         </StInfo>
 
@@ -63,11 +67,14 @@ const OptionComponent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
 
-  .image {
-    border-radius: 80%;
-    overflow: hidden;
-  }
+const StImageWrapper = styled.div`
+  width: 6rem;
+  height: 6rem;
+  border-radius: 80%;
+  overflow: hidden;
+  object-fit: cover;
 `;
 
 const StInfo = styled.div`

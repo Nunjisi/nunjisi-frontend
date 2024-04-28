@@ -8,12 +8,13 @@ import { useEffect, useState } from "react";
 function JoinComponent(props: linkDataI) {
   const { status, name, data } = props.linkData;
   const [isStarted, setIsStarted] = useState(true);
-  const [isTestStarted, setIsTestStarted] = useState(false);
+  const [isSurveyStarted, setIsSurveyStarted] = useState(false);
   const [dataArray, setDataArray] = useState(JSON.parse(data));
   const [selectedArray, setSelectedArray] = useState<string[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [result, setResult] = useState<string[]>(["", "", ""]);
   const [candidateArray, setCandidateArray] = useState<string[]>([]);
+  const [isSurveyDone, setIsSurveyDone] = useState(false);
 
   const roundNum =
     JSON.parse(data).length % 2 === 0
@@ -23,7 +24,7 @@ function JoinComponent(props: linkDataI) {
   useEffect(() => {
     if (isStarted) {
       setTimeout(() => {
-        setIsTestStarted(true);
+        setIsSurveyStarted(true);
       }, 3200);
     }
   }, [isStarted]);
@@ -102,7 +103,8 @@ function JoinComponent(props: linkDataI) {
 
   useEffect(() => {
     if (result[0] != "" && result[1] != "" && result[2] != "") {
-      console.log("최종 " + result); //최종 최종~~
+      setIsSurveyDone(true);
+      // TODO : 결과 보내는 api 호출
     }
   }, [result]);
 
@@ -126,16 +128,18 @@ function JoinComponent(props: linkDataI) {
         </StLayout>
       ) : (
         <StLayoutDim>
-          {!isTestStarted ? (
+          {!isSurveyStarted ? (
             <IntroText>
               두 가지 물건 중 <br /> 더 받고 싶은 선물을 <br />
               선택해주세요!
             </IntroText>
-          ) : (
+          ) : !isSurveyDone ? (
             <>
               <StOption onClick={() => select(0)}>{dataArray[0]}</StOption>
               <StOption onClick={() => select(1)}>{dataArray[1]}</StOption>
             </>
+          ) : (
+            <>넌지시- 테스트 결과</>
           )}
 
           <StBackgroundDim />
