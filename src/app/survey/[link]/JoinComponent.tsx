@@ -4,6 +4,7 @@ import CommonButton from "@/app/components/common/CommonButton";
 import { linkDataI } from "@/app/interface";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
+import { optionList } from "@/app/util/optionList";
 
 function JoinComponent(props: linkDataI) {
   const { status, name, data } = props.linkData;
@@ -16,10 +17,8 @@ function JoinComponent(props: linkDataI) {
   const [candidateArray, setCandidateArray] = useState<string[]>([]);
   const [isSurveyDone, setIsSurveyDone] = useState(false);
 
-  const roundNum =
-    JSON.parse(data).length % 2 === 0
-      ? JSON.parse(data).length / 2
-      : Math.floor(JSON.parse(data).length / 2) - 1;
+  const length = JSON.parse(data).length;
+  const roundNum = length % 2 === 0 ? length / 2 : Math.floor(length / 2) - 1;
 
   useEffect(() => {
     if (isStarted) {
@@ -135,8 +134,32 @@ function JoinComponent(props: linkDataI) {
             </IntroText>
           ) : !isSurveyDone ? (
             <>
-              <StOption onClick={() => select(0)}>{dataArray[0]}</StOption>
-              <StOption onClick={() => select(1)}>{dataArray[1]}</StOption>
+              {optionList.map((option) => {
+                return (
+                  option.text == dataArray[0] && (
+                    <StOption
+                      key={option.text}
+                      onClick={() => select(0)}
+                      color={option.color}
+                    >
+                      {option.text}
+                    </StOption>
+                  )
+                );
+              })}
+              {optionList.map((option) => {
+                return (
+                  option.text == dataArray[1] && (
+                    <StOption
+                      key={option.text}
+                      onClick={() => select(1)}
+                      color={option.color}
+                    >
+                      {option.text}
+                    </StOption>
+                  )
+                );
+              })}
             </>
           ) : (
             <>넌지시- 테스트 결과</>
@@ -245,10 +268,10 @@ const StBackgroundDim = styled.div`
   z-index: -1;
 `;
 
-const StOption = styled.div`
+const StOption = styled.div<{ color: string }>`
   width: 33rem;
   height: 24rem;
-  background-color: white;
+  background-color: ${(props) => props.color};
   font-size: 2.4rem;
   margin-top: 2.4rem;
 `;
