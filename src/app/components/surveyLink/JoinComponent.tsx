@@ -18,6 +18,7 @@ function JoinComponent(props: linkDataI) {
   const [result, setResult] = useState<string[]>(["", "", ""]);
   const [candidateArray, setCandidateArray] = useState<string[]>([]);
   const [isGroupA, setIsGroupA] = useState(true);
+  const [isMoreRound, setIsMoreRound] = useState(false);
 
   useEffect(() => {
     if (isStarted) {
@@ -36,32 +37,68 @@ function JoinComponent(props: linkDataI) {
   }, [length]);
 
   const select = (selectedIdx: number) => {
+    // 추가 라운드
+    if (!isGroupA && isMoreRound) {
+      setResult([result[0], result[1], dataArray[selectedIdx]]);
+      setDataArray(dataArray.slice(2));
+    }
+
     setSelectedArray((prev) => [...prev, dataArray[selectedIdx]]);
     setCurrentRound((prev) => prev + 1);
 
-    if (isGroupA && currentRound == length - 2) {
-      // 결승전
+    if (currentRound == length - 2) {
       console.log("결승전");
-      const thirdPlace = candidateArray.filter(
-        (v) =>
-          v !== dataArray[selectedIdx] &&
-          v !== dataArray[selectedIdx == 0 ? 1 : 0]
-      )[0];
-      setResult([
-        dataArray[selectedIdx],
-        dataArray[selectedIdx == 0 ? 1 : 0],
-        thirdPlace,
-      ]); // 1등, 2등, 3등 결정
-    }
 
-    if (dataArray.length == 3) {
-      console.log("부전승");
-      //부전승 올리고 다음 라운드 시작
+      // 결승전
       if (isGroupA) {
-        setCandidateArray(dataArray); // 3등 후보 결정
+        const thirdPlace = candidateArray.filter(
+          (v) =>
+            v !== dataArray[selectedIdx] &&
+            v !== dataArray[selectedIdx == 0 ? 1 : 0]
+        )[0];
+        setResult([
+          dataArray[selectedIdx],
+          dataArray[selectedIdx == 0 ? 1 : 0],
+          thirdPlace,
+        ]); // 1등, 2등, 3등 결정
       }
 
-      setDataArray((prev) => [dataArray[selectedIdx], dataArray[2]]);
+      if (!isGroupA) {
+        // 3등 결정 전 한 번 더 추가.
+        console.log("herere");
+        setResult([
+          dataArray[selectedIdx],
+          dataArray[selectedIdx == 0 ? 1 : 0],
+          "",
+        ]);
+        console.log("3등 결정전 추가");
+        console.log(
+          candidateArray.filter((v) => v !== dataArray[0] && v !== dataArray[1])
+        );
+        setDataArray(
+          candidateArray.filter((v) => v !== dataArray[0] && v !== dataArray[1])
+        );
+        setIsMoreRound(true);
+        return;
+      }
+    }
+
+    // 3등 후보 결정
+    if (dataArray.length == 3) {
+      if (isGroupA) {
+        setDataArray((prev) => [dataArray[selectedIdx], dataArray[2]]);
+        setCandidateArray(dataArray);
+      }
+    } else if (dataArray.length == 4 && currentRound + 3 == length - 1) {
+      if (!isGroupA) {
+        setCandidateArray(dataArray);
+      }
+    }
+
+    // 부전승
+    if (dataArray.length == 3 && currentRound < length - 2) {
+      console.log("부전승 " + dataArray[2]);
+      setDataArray([...selectedArray, dataArray[selectedIdx], dataArray[2]]);
       setSelectedArray([]);
     } else if (dataArray.length > 1) {
       setDataArray(dataArray.slice(2));
@@ -85,6 +122,9 @@ function JoinComponent(props: linkDataI) {
 
   useEffect(() => {
     console.log("result " + result);
+    if (result[0] !== "" && result[1] !== "" && result[2] !== "") {
+      console.log("최종 결과 " + result);
+    }
   }, [result]);
 
   return (
