@@ -1,3 +1,4 @@
+import { Children } from "react";
 import styled from "styled-components";
 
 interface CommonButtonI {
@@ -5,14 +6,16 @@ interface CommonButtonI {
   color: "semi-black" | "semi-white" | "black" | "white" | "gray";
   handler?: () => void;
   className?: string;
+  children?: React.ReactNode;
 }
 
 function CommonButton(props: CommonButtonI) {
-  const { text, handler, color, className } = props;
+  const { text, handler, color, className, children } = props;
 
   return (
     <StButton onClick={handler} color={color} className={className}>
       <p>{text}</p>
+      {children}
     </StButton>
   );
 }

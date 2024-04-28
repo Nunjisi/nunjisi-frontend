@@ -10,7 +10,7 @@ function CreateComplete(props: CreateCompleteI) {
   const { name, link } = props;
 
   const doCopy = () => {
-    const copyLink = process.env.NEXT_PUBLIC_URL + "/survey/join/" + link;
+    const copyLink = process.env.NEXT_PUBLIC_URL + "/survey/" + link;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(copyLink);
       alert("링크를 복사했습니다.");
