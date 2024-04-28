@@ -13,6 +13,7 @@ function JoinComponent(props: linkDataI) {
   const [selectedArray, setSelectedArray] = useState<string[]>([]);
   const [currentRound, setCurrentRound] = useState(0);
   const [result, setResult] = useState<string[]>(["", "", ""]);
+  const [candidateArray, setCandidateArray] = useState<string[]>([]);
 
   const roundNum =
     JSON.parse(data).length % 2 === 0
@@ -34,21 +35,50 @@ function JoinComponent(props: linkDataI) {
       // dataArray에서 선택된 요소를 제외한 나머지 요소로 업데이트
       setDataArray(dataArray.slice(2));
     }
+
+    if (currentRound > roundNum) {
+      //번외 라운드면
+      setResult([result[0], result[1], dataArray[selectedIdx]]);
+    }
   };
 
   useEffect(() => {
+    console.log("==========");
+    console.log(currentRound + "/" + roundNum);
+
+    // 준결승전
+    if (currentRound === roundNum - 1 && candidateArray.length === 0) {
+      // 3등 될 수 있는 요소들이 이제 정해졌따
+      setCandidateArray(dataArray);
+    }
+
     // 결승전
     if (
-      dataArray.length == 2 &&
-      currentRound == roundNum &&
-      selectedArray.length == 0
+      dataArray.length === 2 &&
+      currentRound === roundNum &&
+      selectedArray.length === 0
     ) {
       setResult([dataArray[0], dataArray[1], ""]);
     } else if (currentRound == roundNum && selectedArray.length == 1) {
-      console.log("우승자 나왔음 !! " + selectedArray[0]);
+      // 1등, 2등 정해짐
+      setCurrentRound(currentRound + 1); //번외 라운드 시작
       if (selectedArray[0] != result[0]) {
         const tmp = result[0];
         setResult([selectedArray[0], tmp, ""]);
+      }
+
+      // 3등 정하기 시작
+      const updatedCandidateArray = candidateArray.filter(
+        (item: string) => item !== result[0] && item !== result[1]
+      );
+      console.log("필터 완료 " + updatedCandidateArray);
+      setCandidateArray(updatedCandidateArray);
+      if (candidateArray.length === 1) {
+        // 홀수
+        setResult([result[0], result[1], updatedCandidateArray[0]]);
+      } else {
+        // 2개면 한 번 더 선택해야 함
+        setDataArray(updatedCandidateArray);
       }
     } else {
       if (dataArray.length === 1) {
@@ -68,10 +98,12 @@ function JoinComponent(props: linkDataI) {
         setSelectedArray([]);
       }
     }
-  }, [dataArray]);
+  }, [dataArray, candidateArray]);
 
   useEffect(() => {
-    console.log(result);
+    if (result[0] != "" && result[1] != "" && result[2] != "") {
+      console.log("최종 " + result); //최종 최종~~
+    }
   }, [result]);
 
   return (
