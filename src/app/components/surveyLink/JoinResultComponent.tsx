@@ -40,7 +40,7 @@ function JoinResultComponent(props: joinResultPropsI) {
           return (
             <>
               {option.text == result[1] && (
-                <StOtherPlace key={option.text}>
+                <StOtherPlace>
                   <StImageWrapper className="other">
                     <ImageDiv
                       src={option.imgSrc}
@@ -56,8 +56,14 @@ function JoinResultComponent(props: joinResultPropsI) {
                   </StOtherPlaceText>
                 </StOtherPlace>
               )}
+            </>
+          );
+        })}
+        {optionList.map((option) => {
+          return (
+            <>
               {option.text == result[2] && (
-                <StOtherPlace key={option.text}>
+                <StOtherPlace>
                   <StImageWrapper className="other">
                     <ImageDiv
                       src={option.imgSrc}
@@ -68,7 +74,7 @@ function JoinResultComponent(props: joinResultPropsI) {
                     />
                   </StImageWrapper>
                   <StOtherPlaceText>
-                    <p>2위</p>
+                    <p>3위</p>
                     <p>{option.text}</p>
                   </StOtherPlaceText>
                 </StOtherPlace>

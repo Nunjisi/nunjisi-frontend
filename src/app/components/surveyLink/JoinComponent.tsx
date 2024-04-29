@@ -7,10 +7,12 @@ import { useEffect, useState } from "react";
 import { optionList } from "@/app/util/optionList";
 import ImageDiv from "../common/ImageDiv";
 import JoinResultComponent from "./JoinResultComponent";
+import axios from "axios";
+import { usePathname } from "next/navigation";
 
 function JoinComponent(props: linkDataI) {
   const { status, name, data } = props.linkData;
-  const [isStarted, setIsStarted] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
   const [isSurveyStarted, setIsSurveyStarted] = useState(false);
   const [isSurveyDone, setIsSurveyDone] = useState(false);
 
@@ -113,11 +115,25 @@ function JoinComponent(props: linkDataI) {
     }
   }, [dataArray]);
 
+  const link = usePathname().split("/")[2];
+  const respondSurvey = async (result: string[]) => {
+    await axios
+      .patch(process.env.NEXT_PUBLIC_API_BASE_URL + "/survey/respond", {
+        link: link,
+        result: JSON.stringify(result),
+      })
+      .then((res) => {
+        setIsSurveyDone(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     console.log("result " + result);
     if (result[0] !== "" && result[1] !== "" && result[2] !== "") {
-      console.log("최종 결과 " + result);
-      setIsSurveyDone(true);
+      respondSurvey(result);
     }
   }, [result]);
 
