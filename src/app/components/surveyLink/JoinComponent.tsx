@@ -2,9 +2,11 @@
 
 import CommonButton from "@/app/components/common/CommonButton";
 import { linkDataI } from "@/app/interface";
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { optionList } from "@/app/util/optionList";
+import ImageDiv from "../common/ImageDiv";
+import JoinResultComponent from "./JoinResultComponent";
 
 function JoinComponent(props: linkDataI) {
   const { status, name, data } = props.linkData;
@@ -28,6 +30,8 @@ function JoinComponent(props: linkDataI) {
   }, [isStarted]);
 
   const length = JSON.parse(data).length;
+  const roundlength =
+    (length - 1) % 4 == 0 || (length - 1) % 4 == 1 ? length - 1 : length;
 
   const select = (selectedIdx: number) => {
     // 추가 라운드
@@ -113,6 +117,7 @@ function JoinComponent(props: linkDataI) {
     console.log("result " + result);
     if (result[0] !== "" && result[1] !== "" && result[2] !== "") {
       console.log("최종 결과 " + result);
+      setIsSurveyDone(true);
     }
   }, [result]);
 
@@ -143,35 +148,56 @@ function JoinComponent(props: linkDataI) {
             </IntroText>
           ) : !isSurveyDone ? (
             <>
-              {optionList.map((option) => {
-                return (
-                  option.text == dataArray[0] && (
-                    <StOption
-                      key={option.text}
-                      onClick={() => select(0)}
-                      color={option.color}
-                    >
-                      {option.text}
-                    </StOption>
-                  )
-                );
-              })}
-              {optionList.map((option) => {
-                return (
-                  option.text == dataArray[1] && (
-                    <StOption
-                      key={option.text}
-                      onClick={() => select(1)}
-                      color={option.color}
-                    >
-                      {option.text}
-                    </StOption>
-                  )
-                );
-              })}
+              <StOptionContainer>
+                {optionList.map((option) => {
+                  return (
+                    option.text == dataArray[0] && (
+                      <StOption
+                        key={option.text}
+                        onClick={() => select(0)}
+                        color={option.color}
+                      >
+                        <ImageDiv
+                          src={option.imgSrc}
+                          width={330}
+                          height={190}
+                          alt={option.text}
+                        />
+                        <p>{option.text}</p>
+                      </StOption>
+                    )
+                  );
+                })}
+                {optionList.map((option) => {
+                  return (
+                    option.text == dataArray[1] && (
+                      <StOption
+                        key={option.text}
+                        onClick={() => select(1)}
+                        color={option.color}
+                      >
+                        <ImageDiv
+                          src={option.imgSrc}
+                          width={330}
+                          height={190}
+                          alt={option.text}
+                        />
+                        <p>{option.text}</p>
+                      </StOption>
+                    )
+                  );
+                })}
+              </StOptionContainer>
+
+              <StProgressBar
+                currentround={currentRound}
+                roundlength={roundlength}
+              >
+                테스트 진행중
+              </StProgressBar>
             </>
           ) : (
-            <>넌지시- 테스트 결과</>
+            <JoinResultComponent result={result} />
           )}
 
           <StBackgroundDim />
@@ -277,10 +303,59 @@ const StBackgroundDim = styled.div`
   z-index: -1;
 `;
 
+const StOptionContainer = styled.div`
+  margin-top: 5.4rem;
+`;
+
 const StOption = styled.div<{ color: string }>`
   width: 33rem;
   height: 24rem;
   background-color: ${(props) => props.color};
-  font-size: 2.4rem;
+  font-size: 2.2rem;
+  color: white;
   margin-top: 2.4rem;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  font-weight: 500;
+
+  & > p {
+    margin: 0.5rem 0 0 1.6rem;
+  }
+`;
+
+const StProgressBar = styled.div<{ currentround: number; roundlength: number }>`
+  width: 33rem;
+  height: 4.8rem;
+  background-color: #686868;
+  color: white;
+  font-size: 1.5rem;
+  border-radius: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 3rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: ${(props) => (props.currentround / props.roundlength) * 100}%;
+    background-color: black;
+    border-radius: 0.8rem 0 0 0.8rem;
+    transition: width 0.5s linear; /* Smooth transition */
+    color: white;
+  }
+
+  &::after {
+    /* 흰색 텍스트를 추가하는 가상 요소 */
+    content: "테스트 진행중"; /* 텍스트 내용 */
+    position: absolute;
+    color: white; /* 텍스트 색상을 흰색으로 설정 */
+  }
+
+  color: white;
+  font-size: 1.5rem;
 `;

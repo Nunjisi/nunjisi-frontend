@@ -16,7 +16,7 @@ export default function SurveyNew() {
     optionList.map((item) => item.text)
   );
   const [isMinimumOptionSelected, setIsMinimumOptionSelected] = useState(
-    selectedOptionList.length >= 2
+    selectedOptionList.length >= 4
   );
   const [createdLink, setCreatedLink] = useState("");
 
@@ -135,7 +135,7 @@ export default function SurveyNew() {
               />
             ) : (
               <CommonButton
-                text="항목을 두 개 이상 선택해주세요"
+                text="항목을 네 개 이상 선택해주세요"
                 color="gray"
                 className="disabled bottomButton"
               />
